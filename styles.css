@@ -36,6 +36,7 @@ body {
     animation: glow 2s ease-in-out infinite alternate;
     position: relative;
     z-index: 1;
+    letter-spacing: 20px;
 }
 
 .lightning {
@@ -59,13 +60,14 @@ body {
     background: linear-gradient(45deg, 
         transparent 0%,
         transparent 45%,
-        #fff 45%,
-        #fff 55%,
+        #FFD700 45%,
+        #FFD700 55%,
         transparent 55%,
         transparent 100%
     );
     opacity: 0;
     animation: lightning 4s infinite;
+    filter: drop-shadow(0 0 10px #FFD700);
 }
 
 @keyframes lightning {
@@ -116,5 +118,6 @@ body {
 @media (max-width: 768px) {
     .title {
         font-size: 4rem;
+        letter-spacing: 10px;
     }
 } 
