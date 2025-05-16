@@ -1,69 +1,32 @@
 export async function onRequest(context) {
-    try {
-        // بررسی وجود KV
-        if (!context.env.users) {
-            console.error('KV namespace "users" یافت نشد');
-            return new Response(JSON.stringify({
-                error: 'تنظیمات KV نامعتبر است'
-            }), {
-                status: 500,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
+    // گرفتن secret از query string
+    const url = new URL(context.request.url);
+    const secret = url.searchParams.get('secret');
 
-        // دریافت secret از query string
-        const url = new URL(context.request.url);
-        const secret = url.searchParams.get('secret');
-
-        if (!secret) {
-            return new Response(JSON.stringify({
-                error: 'لطفاً secret را در query string وارد کنید'
-            }), {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-
-        console.log('درخواست برای secret:', secret);
-
-        // دریافت مقدار از KV
-        const value = await context.env.users.get(secret);
-        console.log('مقدار دریافت شده:', value);
-
-        if (!value) {
-            return new Response(JSON.stringify({
-                error: 'secret نامعتبر است'
-            }), {
-                status: 404,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        }
-
-        // نمایش مقدار
-        return new Response(JSON.stringify({
-            value: value
-        }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-    } catch (error) {
-        console.error('خطا:', error);
-        return new Response(JSON.stringify({
-            error: 'خطا در پردازش درخواست',
-            details: error.message
-        }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+    if (!secret) {
+        return new Response('پارامتر secret ارسال نشده است.', { status: 400 });
     }
+
+    // بررسی وجود binding KV
+    if (!context.env.users) {
+        return new Response('KV namespace با نام users پیدا نشد.', { status: 500 });
+    }
+
+    // دریافت مقدار از KV
+    let value;
+    try {
+        value = await context.env.users.get(secret);
+    } catch (e) {
+        return new Response('خطا در ارتباط با KV: ' + e.message, { status: 500 });
+    }
+
+    if (!value) {
+        return new Response('کلید مورد نظر پیدا نشد.', { status: 404 });
+    }
+
+    // نمایش مقدار به صورت ساده روی صفحه
+    return new Response(value, {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+    });
 } 
