@@ -21,6 +21,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    perspective: 1000px;
 }
 
 .lightning-container {
@@ -29,14 +30,51 @@ body {
 }
 
 .title {
-    font-size: 8rem;
-    font-weight: bold;
+    font-size: 10rem;
+    font-weight: 900;
     color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    animation: glow 2s ease-in-out infinite alternate;
+    letter-spacing: 30px;
+    text-transform: uppercase;
     position: relative;
-    z-index: 1;
-    letter-spacing: 20px;
+    animation: float 6s ease-in-out infinite;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.title::before {
+    content: 'PETROS';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #FFD700;
+    text-shadow: 
+        0 0 10px rgba(255, 215, 0, 0.5),
+        0 0 20px rgba(255, 215, 0, 0.3),
+        0 0 30px rgba(255, 215, 0, 0.2);
+    animation: glitch 3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-5px, -5px);
+}
+
+.title::after {
+    content: 'PETROS';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #FF69B4;
+    text-shadow: 
+        0 0 10px rgba(255, 105, 180, 0.5),
+        0 0 20px rgba(255, 105, 180, 0.3),
+        0 0 30px rgba(255, 105, 180, 0.2);
+    animation: glitch 2s infinite reverse;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    transform: translate(5px, 5px);
 }
 
 .lightning {
@@ -127,24 +165,33 @@ body {
     }
 }
 
-@keyframes glow {
-    from {
-        text-shadow: 0 0 10px #fff,
-                     0 0 20px #fff,
-                     0 0 30px #fff,
-                     0 0 40px #fff;
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotateX(0);
     }
-    to {
-        text-shadow: 0 0 20px #fff,
-                     0 0 30px #fff,
-                     0 0 40px #fff,
-                     0 0 50px #fff;
+    50% {
+        transform: translateY(-20px) rotateX(5deg);
+    }
+}
+
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(-5px, -5px);
+    }
+    25% {
+        transform: translate(5px, 5px);
+    }
+    50% {
+        transform: translate(-5px, 5px);
+    }
+    75% {
+        transform: translate(5px, -5px);
     }
 }
 
 @media (max-width: 768px) {
     .title {
         font-size: 4rem;
-        letter-spacing: 10px;
+        letter-spacing: 15px;
     }
 } 
